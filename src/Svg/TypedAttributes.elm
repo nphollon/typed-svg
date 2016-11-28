@@ -1,4 +1,4 @@
-module Svg.TypedAttributes exposing (Length, cm, cx, cy, em, ex, height, inch, mm, num, opacity, pc, percent, pt, px, r, width, x, y)
+module Svg.TypedAttributes exposing (Length, Transform, cm, cx, cy, em, ex, height, inch, matrix, mm, num, opacity, pc, percent, pt, px, r, rotate, scale, skewX, skewY, transform, translate, width, x, y)
 
 import Svg exposing (Attribute)
 import Svg.Attributes as Att
@@ -40,36 +40,6 @@ inch =
     In
 
 
-mm : Float -> Length
-mm =
-    Mm
-
-
-num : Float -> Length
-num =
-    Num
-
-
-pc : Float -> Length
-pc =
-    Pc
-
-
-percent : Float -> Length
-percent =
-    Percent
-
-
-pt : Float -> Length
-pt =
-    Pt
-
-
-px : Float -> Length
-px =
-    Px
-
-
 lengthString : Length -> String
 lengthString length =
     case length of
@@ -102,6 +72,91 @@ lengthString length =
 
         Px x ->
             toString x ++ "px"
+
+
+mm : Float -> Length
+mm =
+    Mm
+
+
+num : Float -> Length
+num =
+    Num
+
+
+pc : Float -> Length
+pc =
+    Pc
+
+
+percent : Float -> Length
+percent =
+    Percent
+
+
+pt : Float -> Length
+pt =
+    Pt
+
+
+px : Float -> Length
+px =
+    Px
+
+
+
+-- Transforms
+
+
+type Transform
+    = XForm String (List Float)
+
+
+matrix : Float -> Float -> Float -> Float -> Float -> Float -> Transform
+matrix a b c d e f =
+    XForm "matrix" [ a, b, c, d, e, f ]
+
+
+rotate : Float -> Float -> Float -> Transform
+rotate a x y =
+    XForm "rotate" [ a, x, y ]
+
+
+scale : Float -> Float -> Transform
+scale x y =
+    XForm "scale" [ x, y ]
+
+
+skewX : Float -> Transform
+skewX x =
+    XForm "skewX" [ x ]
+
+
+skewY : Float -> Transform
+skewY y =
+    XForm "skewY" [ y ]
+
+
+transform : List Transform -> Attribute a
+transform =
+    List.map transformString >> String.join " " >> Att.transform
+
+
+translate : Float -> Float -> Transform
+translate x y =
+    XForm "translate" [ x, y ]
+
+
+transformString : Transform -> String
+transformString xform =
+    case xform of
+        XForm name args ->
+            String.concat
+                [ name
+                , "("
+                , String.join " " (List.map toString args)
+                , ")"
+                ]
 
 
 

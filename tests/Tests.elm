@@ -19,6 +19,7 @@ all =
         , testLengthAttrEqual "cy" cy Att.cy
         , testLengthAttrEqual "r" r Att.r
         , testNumberAttrEqual "opacity" opacity Att.opacity
+        , testTransforms
         ]
 
 
@@ -85,3 +86,44 @@ testNumberAttrEqual name typed untyped =
             Expect.equal
                 (typed 12.1)
                 (untyped "12.1")
+
+
+testTransforms : Test
+testTransforms =
+    describe "transforms"
+        [ test "affine mattrix" <|
+            \() ->
+                Expect.equal
+                    (transform [ matrix 1 2 3 4 5 6 ])
+                    (Att.transform "matrix(1 2 3 4 5 6)")
+        , test "translation" <|
+            \() ->
+                Expect.equal
+                    (transform [ translate 2 -3 ])
+                    (Att.transform "translate(2 -3)")
+        , test "rotation" <|
+            \() ->
+                Expect.equal
+                    (transform [ rotate 0.5 1 1 ])
+                    (Att.transform "rotate(0.5 1 1)")
+        , test "scale" <|
+            \() ->
+                Expect.equal
+                    (transform [ scale 3 4 ])
+                    (Att.transform "scale(3 4)")
+        , test "skewX" <|
+            \() ->
+                Expect.equal
+                    (transform [ skewX 4 ])
+                    (Att.transform "skewX(4)")
+        , test "skewY" <|
+            \() ->
+                Expect.equal
+                    (transform [ skewY 3 ])
+                    (Att.transform "skewY(3)")
+        , test "multiple transforms" <|
+            \() ->
+                Expect.equal
+                    (transform [ rotate 1 2 3, scale -2 0.1 ])
+                    (Att.transform "rotate(1 2 3) scale(-2 0.1)")
+        ]
