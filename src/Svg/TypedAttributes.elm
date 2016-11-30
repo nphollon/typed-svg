@@ -1,4 +1,4 @@
-module Svg.TypedAttributes exposing (Length, Paint, Transform, bold, bolder, cm, color, currentColor, cx, cy, em, ex, fill, fontFamily, fontSize, height, inch, intWeight, large, larger, lighter, matrix, medium, mm, noPaint, normalWeight, num, opacity, paintRef, paintRefWithDefault, pc, percent, pt, px, r, rotate, scale, skewX, skewY, small, smaller, transform, translate, viewBox, width, x, xLarge, xSmall, xxLarge, xxSmall, y)
+module Svg.TypedAttributes exposing (Length, Paint, Transform, bold, bolder, cm, color, currentColor, cx, cy, em, ex, fill, fontFamily, fontSize, height, inch, intWeight, large, larger, lighter, matrix, medium, mm, noPaint, normalWeight, num, opacity, paintRef, paintRefWithDefault, pc, percent, pointerEventsVisiblePainted, pointerEventsVisibleFill, pointerEventsVisibleStroke, pointerEventsVisible, pointerEventsPainted, pointerEventsFill, pointerEventsStroke, pointerEventsAll, pointerEventsNone, pt, px, r, rotate, scale, skewX, skewY, small, smaller, transform, translate, viewBox, width, x, xLarge, xSmall, xxLarge, xxSmall, y)
 
 import Color exposing (Color)
 import Svg exposing (Attribute)
@@ -373,6 +373,51 @@ fill =
 height : Length -> Attribute a
 height =
     lengthString >> Att.height
+
+
+pointerEventsVisiblePainted : Attribute a
+pointerEventsVisiblePainted =
+    Att.pointerEvents "visiblePainted"
+
+
+pointerEventsVisibleFill : Attribute a
+pointerEventsVisibleFill =
+    Att.pointerEvents "visibleFill"
+
+
+pointerEventsVisibleStroke : Attribute a
+pointerEventsVisibleStroke =
+    Att.pointerEvents "visibleStroke"
+
+
+pointerEventsVisible : Attribute a
+pointerEventsVisible =
+    Att.pointerEvents "visible"
+
+
+pointerEventsPainted : Attribute a
+pointerEventsPainted =
+    Att.pointerEvents "painted"
+
+
+pointerEventsFill : Attribute a
+pointerEventsFill =
+    Att.pointerEvents "fill"
+
+
+pointerEventsStroke : Attribute a
+pointerEventsStroke =
+    Att.pointerEvents "stroke"
+
+
+pointerEventsAll : Attribute a
+pointerEventsAll =
+    Att.pointerEvents "all"
+
+
+pointerEventsNone : Attribute a
+pointerEventsNone =
+    Att.pointerEvents "none"
 
 
 opacity : Float -> Attribute a

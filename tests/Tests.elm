@@ -29,13 +29,14 @@ all =
         , testLengthAttrEqual "cx" cx Att.cx
         , testLengthAttrEqual "cy" cy Att.cy
         , testLengthAttrEqual "r" r Att.r
+        , testPaintAttrEqual "fill" fill Att.fill
         , testNumberAttrEqual "opacity" opacity Att.opacity
+        , testViewBox
         , testTransforms
         , testFontSize
         , testFontWeight
         , testFontFamily
-        , testViewBox
-        , testPaintAttrEqual "fill" fill Att.fill
+        , testPointerEvents
         ]
 
 
@@ -277,3 +278,32 @@ testViewBox =
             Expect.equal
                 (viewBox 0 -5 100 200)
                 (Att.viewBox "0 -5 100 200")
+
+
+testPointerEvents : Test
+testPointerEvents =
+    test "pointer-events" <|
+        \() ->
+            Expect.equalLists
+                [ pointerEventsVisiblePainted
+                , pointerEventsVisibleFill
+                , pointerEventsVisibleStroke
+                , pointerEventsVisible
+                , pointerEventsPainted
+                , pointerEventsFill
+                , pointerEventsStroke
+                , pointerEventsAll
+                , pointerEventsNone
+                ]
+                (List.map Att.pointerEvents
+                    [ "visiblePainted"
+                    , "visibleFill"
+                    , "visibleStroke"
+                    , "visible"
+                    , "painted"
+                    , "fill"
+                    , "stroke"
+                    , "all"
+                    , "none"
+                    ]
+                )
