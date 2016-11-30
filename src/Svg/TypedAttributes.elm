@@ -1,8 +1,18 @@
-module Svg.TypedAttributes exposing (Length, Paint, Transform, cm, color, currentColor, cx, cy, em, ex, fill, fontFamily, fontSize, height, inch, large, larger, matrix, medium, mm, noPaint, num, opacity, paintRef, paintRefWithDefault, pc, percent, pt, px, r, rotate, scale, skewX, skewY, small, smaller, transform, translate, viewBox, width, x, xLarge, xSmall, xxLarge, xxSmall, y)
+module Svg.TypedAttributes exposing (Length, Paint, Transform, bold, bolder, cm, color, currentColor, cx, cy, em, ex, fill, fontFamily, fontSize, height, inch, intWeight, large, larger, lighter, matrix, medium, mm, noPaint, normalWeight, num, opacity, paintRef, paintRefWithDefault, pc, percent, pt, px, r, rotate, scale, skewX, skewY, small, smaller, transform, translate, viewBox, width, x, xLarge, xSmall, xxLarge, xxSmall, y)
 
 import Color exposing (Color)
 import Svg exposing (Attribute)
 import Svg.Attributes as Att
+
+
+{-|
+# Units of length
+# Transforms
+# Paint
+# Fonts
+# Misc Attributes
+-}
+
 
 
 -- Units of length
@@ -242,22 +252,17 @@ paintString paint =
 
 
 
--- Attributes
+-- Fonts
 
 
-cx : Length -> Attribute a
-cx =
-    lengthString >> Att.cx
+bold : Attribute a
+bold =
+    Att.fontWeight "bold"
 
 
-cy : Length -> Attribute a
-cy =
-    lengthString >> Att.cy
-
-
-fill : Paint -> Attribute a
-fill =
-    paintString >> Att.fill
+bolder : Attribute a
+bolder =
+    Att.fontWeight "bolder"
 
 
 {-| An empty list will set `font-family: inherit`
@@ -279,9 +284,16 @@ fontSize =
     lengthString >> Att.fontSize
 
 
-height : Length -> Attribute a
-height =
-    lengthString >> Att.height
+{-| The weight will be rounded to the nearest allowed value... multiples of 100 between 100 to 900.
+-}
+intWeight : Int -> Attribute a
+intWeight i =
+    let
+        rounded =
+            (((i + 50) // 100) * 100)
+                |> clamp 100 900
+    in
+        Att.fontWeight (toString rounded)
 
 
 large : Attribute a
@@ -294,19 +306,19 @@ larger =
     Att.fontSize "larger"
 
 
+lighter : Attribute a
+lighter =
+    Att.fontWeight "lighter"
+
+
 medium : Attribute a
 medium =
     Att.fontSize "medium"
 
 
-opacity : Float -> Attribute a
-opacity =
-    toString >> Att.opacity
-
-
-r : Length -> Attribute a
-r =
-    lengthString >> Att.r
+normalWeight : Attribute a
+normalWeight =
+    Att.fontWeight "normal"
 
 
 small : Attribute a
@@ -317,24 +329,6 @@ small =
 smaller : Attribute a
 smaller =
     Att.fontSize "smaller"
-
-
-viewBox : Float -> Float -> Float -> Float -> Attribute a
-viewBox minX minY width height =
-    [ minX, minY, width, height ]
-        |> List.map toString
-        |> String.join " "
-        |> Att.viewBox
-
-
-width : Length -> Attribute a
-width =
-    lengthString >> Att.width
-
-
-x : Length -> Attribute a
-x =
-    lengthString >> Att.x
 
 
 xLarge : Attribute a
@@ -355,6 +349,58 @@ xxLarge =
 xxSmall : Attribute a
 xxSmall =
     Att.fontSize "xx-small"
+
+
+
+-- Misc Attributes
+
+
+cx : Length -> Attribute a
+cx =
+    lengthString >> Att.cx
+
+
+cy : Length -> Attribute a
+cy =
+    lengthString >> Att.cy
+
+
+fill : Paint -> Attribute a
+fill =
+    paintString >> Att.fill
+
+
+height : Length -> Attribute a
+height =
+    lengthString >> Att.height
+
+
+opacity : Float -> Attribute a
+opacity =
+    toString >> Att.opacity
+
+
+r : Length -> Attribute a
+r =
+    lengthString >> Att.r
+
+
+viewBox : Float -> Float -> Float -> Float -> Attribute a
+viewBox minX minY width height =
+    [ minX, minY, width, height ]
+        |> List.map toString
+        |> String.join " "
+        |> Att.viewBox
+
+
+width : Length -> Attribute a
+width =
+    lengthString >> Att.width
+
+
+x : Length -> Attribute a
+x =
+    lengthString >> Att.x
 
 
 y : Length -> Attribute a

@@ -32,6 +32,7 @@ all =
         , testNumberAttrEqual "opacity" opacity Att.opacity
         , testTransforms
         , testFontSize
+        , testFontWeight
         , testFontFamily
         , testViewBox
         , testPaintAttrEqual "fill" fill Att.fill
@@ -220,6 +221,52 @@ testFontFamily =
                 Expect.equal
                     (fontFamily [])
                     (Att.fontFamily "inherit")
+        ]
+
+
+testFontWeight : Test
+testFontWeight =
+    describe "font-weight"
+        [ test "named weights" <|
+            \() ->
+                Expect.equalLists
+                    [ normalWeight
+                    , bold
+                    , bolder
+                    , lighter
+                    ]
+                    (List.map Att.fontWeight
+                        [ "normal"
+                        , "bold"
+                        , "bolder"
+                        , "lighter"
+                        ]
+                    )
+        , test "allowed integer weight" <|
+            \() ->
+                Expect.equal
+                    (intWeight 200)
+                    (Att.fontWeight "200")
+        , test "integer weight rounded down" <|
+            \() ->
+                Expect.equal
+                    (intWeight 349)
+                    (Att.fontWeight "300")
+        , test "integer weight rounded up" <|
+            \() ->
+                Expect.equal
+                    (intWeight 350)
+                    (Att.fontWeight "400")
+        , test "integer weight ceiling at 900" <|
+            \() ->
+                Expect.equal
+                    (intWeight 1000)
+                    (Att.fontWeight "900")
+        , test "integer weight floor at 100" <|
+            \() ->
+                Expect.equal
+                    (intWeight 5)
+                    (Att.fontWeight "100")
         ]
 
 
