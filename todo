@@ -1,2 +1,6 @@
 - "fill" has a separate usage for animation elements
-- all presentation attributes have "inherit" as an option
+
+- All presentation attributes have "inherit" as an option. Is this actually useful?
+
+- Support for CSS length units adds bulk to the interface. Should there be convenience functions for using unitless lengths? For example, instead of `cx (num 20)`, there would be `cx 20`. Maybe in a separate module.
+
