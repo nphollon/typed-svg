@@ -1,11 +1,22 @@
 module Tests exposing (..)
 
+-- Test Harness --
+
 import Test exposing (..)
 import Expect exposing (Expectation)
 import Fuzz exposing (list, int, tuple, string)
+
+
+-- Libs --
+
+import Color
 import Svg exposing (Attribute)
-import Svg.TypedAttributes exposing (..)
 import Svg.Attributes as Att
+
+
+-- Under Test --
+
+import Svg.TypedAttributes exposing (..)
 
 
 all : Test
@@ -20,6 +31,10 @@ all =
         , testLengthAttrEqual "r" r Att.r
         , testNumberAttrEqual "opacity" opacity Att.opacity
         , testTransforms
+        , testFontSize
+        , testFontFamily
+        , testViewBox
+        , testPaintAttrEqual "fill" fill Att.fill
         ]
 
 
@@ -88,6 +103,37 @@ testNumberAttrEqual name typed untyped =
                 (untyped "12.1")
 
 
+testPaintAttrEqual : String -> (Paint -> Attribute a) -> (String -> Attribute a) -> Test
+testPaintAttrEqual name typed untyped =
+    describe name
+        [ test "no color" <|
+            \() ->
+                Expect.equal
+                    (typed noPaint)
+                    (untyped "none")
+        , test "current color" <|
+            \() ->
+                Expect.equal
+                    (typed currentColor)
+                    (untyped "currentColor")
+        , test "explicit color" <|
+            \() ->
+                Expect.equal
+                    (typed (color (Color.rgb 255 16 0)))
+                    (untyped "rgb(255,16,0)")
+        , test "function reference" <|
+            \() ->
+                Expect.equal
+                    (typed (paintRef "gradient"))
+                    (untyped "url(#gradient) none")
+        , test "function reference with default" <|
+            \() ->
+                Expect.equal
+                    (typed (paintRefWithDefault "red" (Color.rgb 0 0 0)))
+                    (untyped "url(#red) rgb(0,0,0)")
+        ]
+
+
 testTransforms : Test
 testTransforms =
     describe "transforms"
@@ -127,3 +173,60 @@ testTransforms =
                     (transform [ rotate 1 2 3, scale -2 0.1 ])
                     (Att.transform "rotate(1 2 3) scale(-2 0.1)")
         ]
+
+
+testFontSize : Test
+testFontSize =
+    describe "font-size"
+        [ testLengthAttrEqual "with explicit length" fontSize Att.fontSize
+        , test "absolute and relative font sizes" <|
+            \() ->
+                Expect.equalLists
+                    [ xxSmall
+                    , xSmall
+                    , small
+                    , medium
+                    , large
+                    , xLarge
+                    , xxLarge
+                    , larger
+                    , smaller
+                    ]
+                    (List.map Att.fontSize
+                        [ "xx-small"
+                        , "x-small"
+                        , "small"
+                        , "medium"
+                        , "large"
+                        , "x-large"
+                        , "xx-large"
+                        , "larger"
+                        , "smaller"
+                        ]
+                    )
+        ]
+
+
+testFontFamily : Test
+testFontFamily =
+    describe "font-family"
+        [ test "list of families" <|
+            \() ->
+                Expect.equal
+                    (fontFamily [ "Times", "serif" ])
+                    (Att.fontFamily "Times, serif")
+        , test "no families" <|
+            \() ->
+                Expect.equal
+                    (fontFamily [])
+                    (Att.fontFamily "inherit")
+        ]
+
+
+testViewBox : Test
+testViewBox =
+    test "viewBox" <|
+        \() ->
+            Expect.equal
+                (viewBox 0 -5 100 200)
+                (Att.viewBox "0 -5 100 200")
