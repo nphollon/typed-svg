@@ -430,7 +430,7 @@ r =
     lengthString >> Att.r
 
 
-viewBox : number -> number_ -> number__ -> number___ -> Attribute a
+viewBox : number -> number -> number -> number -> Attribute a
 viewBox minX minY width height =
     [ minX, minY, width, height ]
         |> List.map toString
