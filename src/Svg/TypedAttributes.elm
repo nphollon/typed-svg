@@ -120,32 +120,43 @@ px =
 
 
 type Transform
-    = XForm String (List Float)
+    = Transform String
 
 
-matrix : Float -> Float -> Float -> Float -> Float -> Float -> Transform
+atomicTransform : String -> List number -> Transform
+atomicTransform name args =
+    Transform <|
+        String.concat
+            [ name
+            , "("
+            , String.join " " (List.map toString args)
+            , ")"
+            ]
+
+
+matrix : number -> number -> number -> number -> number -> number -> Transform
 matrix a b c d e f =
-    XForm "matrix" [ a, b, c, d, e, f ]
+    atomicTransform "matrix" [ a, b, c, d, e, f ]
 
 
-rotate : Float -> Float -> Float -> Transform
+rotate : number -> number -> number -> Transform
 rotate a x y =
-    XForm "rotate" [ a, x, y ]
+    atomicTransform "rotate" [ a, x, y ]
 
 
-scale : Float -> Float -> Transform
+scale : number -> number -> Transform
 scale x y =
-    XForm "scale" [ x, y ]
+    atomicTransform "scale" [ x, y ]
 
 
-skewX : Float -> Transform
+skewX : number -> Transform
 skewX x =
-    XForm "skewX" [ x ]
+    atomicTransform "skewX" [ x ]
 
 
-skewY : Float -> Transform
+skewY : number -> Transform
 skewY y =
-    XForm "skewY" [ y ]
+    atomicTransform "skewY" [ y ]
 
 
 transform : List Transform -> Attribute a
@@ -153,21 +164,16 @@ transform =
     List.map transformString >> String.join " " >> Att.transform
 
 
-translate : Float -> Float -> Transform
+translate : number -> number -> Transform
 translate x y =
-    XForm "translate" [ x, y ]
+    atomicTransform "translate" [ x, y ]
 
 
 transformString : Transform -> String
 transformString xform =
     case xform of
-        XForm name args ->
-            String.concat
-                [ name
-                , "("
-                , String.join " " (List.map toString args)
-                , ")"
-                ]
+        Transform str ->
+            str
 
 
 
